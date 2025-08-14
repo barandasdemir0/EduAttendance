@@ -21,6 +21,8 @@ namespace EduAttendance.Web.API.Controller
             List<Student> students = _dbContext.Students.ToList();
             return Ok(students);
 
+            //deneme
+
         }
     }
 }
