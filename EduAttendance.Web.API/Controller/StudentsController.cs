@@ -2,26 +2,25 @@
 using EduAttendance.Web.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace EduAttendance.Web.API.Controller
 {
    
     [ApiController]
     [Route("[controller]")]
-    public sealed class StudentsController : ControllerBase
+    public sealed class StudentsController(ApplicationDbContext dbContext) : ControllerBase
     {
-        ApplicationDbContext _dbContext;
-        public StudentsController(ApplicationDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            List<Student> students = _dbContext.Students.ToList();
+           
+            List<Student> students = await dbContext.Students.ToListAsync(cancellationToken);
             return Ok(students);
 
-            //deneme
+           
 
         }
     }
