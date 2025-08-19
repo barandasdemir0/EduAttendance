@@ -17,13 +17,15 @@ namespace EduAttendance.Web.API.Controller
     public sealed class StudentsController(ApplicationDbContext dbContext) : ControllerBase
     {
 
+        Result res = default!;
+
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
 
-            string name = "Baran Daşdemir";
-            name.ToUpper();
-   
+            //string name = "Baran Daşdemir";
+            //name.ToUpper();
+
 
             List<Student> students = await dbContext.Students.ToListAsync(cancellationToken);
             return Ok(students);
@@ -32,6 +34,8 @@ namespace EduAttendance.Web.API.Controller
         [HttpPost]
         public async Task<IActionResult> Create(CreateStudenDto request, CancellationToken cancellationToken)
         {
+
+
 
             //mapster kurmadım böyle olur 
             //Student student = new()
@@ -47,8 +51,8 @@ namespace EduAttendance.Web.API.Controller
             ValidationResult validationResult = validations.Validate(request);
             if (validationResult.IsValid == false)
             {
-                var messages = validationResult.Errors.Select(s => s.ErrorMessage).ToList();
-                return BadRequest(messages);
+                res = Result.Fail(validationResult.Errors.Select(s => s.ErrorMessage).ToList());
+                return BadRequest(res);
             }
 
 
@@ -56,7 +60,8 @@ namespace EduAttendance.Web.API.Controller
 
             if (isIdentityNumberExists == true)
             {
-                return BadRequest(" öğrenci numarası kaydedildi");
+                res = Result.Fail ("Öğrenci kaydı başarıyla tamamlandı");
+                return BadRequest(res);
             }
 
             //fluent kullanmazsak böle saçma kullanırız
@@ -69,7 +74,17 @@ namespace EduAttendance.Web.API.Controller
             Student student = request.Adapt<Student>();
             dbContext.Add(student);
             await dbContext.SaveChangesAsync(cancellationToken);
-            return Ok("Öğrenci kaydı başarıyla tamamlandı");
+            //await dbContext.SaveChangesAsync(cancellationToken);
+            //return Ok(new { message = "Öğrenci kaydı başarıyla tamamlandı" });
+
+
+
+
+
+            res =  Result.Succeed("Öğrenci kaydı başarıyla tamamlandı");
+            return Ok(res);
+
+
         }
 
 
