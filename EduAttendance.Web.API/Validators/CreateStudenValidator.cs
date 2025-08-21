@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace EduAttendance.Web.API.Validators
 {
-    public class CreateStudenValidator:AbstractValidator<CreateStudenDto>
+    public class CreateStudentValidator : AbstractValidator<CreateStudenDto>
     {
-        public CreateStudenValidator()
+        public CreateStudentValidator()
         {
-           
+
 
             RuleFor(p => p.FirstName).MinimumLength(3).WithMessage("Ad en az 3 karakter olmalıdır");
 
@@ -22,6 +22,7 @@ namespace EduAttendance.Web.API.Validators
 
 
         }
+
 
 
         public static bool TCKimlikNoDogrula(string tc)
